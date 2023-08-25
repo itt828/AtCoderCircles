@@ -2,6 +2,7 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
+    "prepare": "panda codegen",
     "build": "remix build",
     "dev": "remix dev",
     "start": "remix-serve build",
@@ -15,9 +16,11 @@
     "isbot": "^3.6.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "recharts": "^2.8.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@pandacss/dev": "^0.12.1",
     "@remix-run/dev": "^1.19.3",
     "@remix-run/eslint-config": "^1.19.3",
     "@types/react": "^18.0.35",
