@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const userSchema = z.object({
   atcoderId: z.string(),
-  algorithmRating: z.number(),
+  algorithmRating: z.nullable(z.number()),
   heuristicsRating: z.nullable(z.number()),
 });
 export type User = z.infer<typeof userSchema>;
@@ -16,7 +16,7 @@ export const teamSchema = z.object({
 export type Team = z.infer<typeof teamSchema>;
 
 export const sampleUsers: User[] = [
-  { atcoderId: "itt", algorithmRating: 1228, heuristicsRating: 563 },
+  { atcoderId: "itt828", algorithmRating: 1228, heuristicsRating: 563 },
   { atcoderId: "tatyam", algorithmRating: 3148, heuristicsRating: 1222 },
   { atcoderId: "simasima", algorithmRating: 2566, heuristicsRating: null },
   { atcoderId: "shobonvip", algorithmRating: 2287, heuristicsRating: 218 },
