@@ -1,0 +1,39 @@
+version: "3"
+
+networks:
+  default:
+
+services:
+  mysql:
+    container_name: atcc-mysql
+    image: mariadb:10
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: atcc-db
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    expose:
+      - 3306
+    healthcheck:
+      test: mysql --user=root --password=password --execute "SHOW DATABASES;"
+      interval: 1s
+      timeout: 10s
+      retries: 60
+    ports:
+      - "3306:3306"
+    networks:
+      - default
+
+  adminer:
+    image: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+    ports:
+      - "8080:8080"
+    networks:
+      - default
+    depends_on:
+      mysql:
+        condition: service_healthy
