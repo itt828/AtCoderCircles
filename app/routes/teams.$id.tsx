@@ -1,16 +1,23 @@
 import { useLoaderData } from "@remix-run/react";
-import { User, sampleUsers } from "~/models/user.server";
+import { type User, sampleUsers } from "~/models/user.server";
 import { PieChart, Pie, Text, Cell } from "recharts";
-import { Color, colorCodeMap, mapByColor } from "~/libs/rating.server";
-import { useReducer } from "react";
+import { type Color, colorCodeMap, mapByColor } from "~/libs/rating.server";
+import Card from "~/components/card";
+import { grid } from "styled-system/patterns";
 
 export const loader = async () => {
   const colorUsersList = mapByColor(sampleUsers);
   console.log(colorUsersList);
   return {
     list: colorUsersList.map(([color, users]) => {
-      const item: { color: Color; count: number; users: User[] } = {
+      const item: {
+        color: Color;
+        colorCode?: string;
+        count: number;
+        users: User[];
+      } = {
         color: color,
+        colorCode: colorCodeMap.get(color)?.color,
         count: users.length,
         users: users,
       };
@@ -41,17 +48,20 @@ export default function Team() {
     </>
   );
   return (
-    <div>
-      {list.map(({ color, count, users }) => (
-        <div key={color}>
-          {users.map((user) => (
-            <div key={user.atcoderId}>
-              {user.atcoderId}: {user.algorithmRating}
-            </div>
-          ))}
-        </div>
-      ))}
-      <div>
+    <div className={grid({ columns: 1 })}>
+      <Card>
+        {list.map(({ color, colorCode, count, users }) => (
+          <div key={color}>
+            {users.map((user) => (
+              <div key={user.atcoderId}>
+                <span style={{ color: colorCode }}>{user.atcoderId} </span>:{" "}
+                {user.algorithmRating}
+              </div>
+            ))}
+          </div>
+        ))}
+      </Card>
+      <Card>
         <PieChart width={730} height={300}>
           <Pie
             data={pie}
@@ -67,7 +77,7 @@ export default function Team() {
             ))}
           </Pie>
         </PieChart>
-      </div>
+      </Card>
     </div>
   );
 }
