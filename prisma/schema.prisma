@@ -14,7 +14,7 @@ model User {
   atcoderId        String  @id
   algorithmRating  Int?
   heuristicsRating Int?
-  Team             Team?   @relation(fields: [teamId], references: [id])
+  teams            Team[]
   teamId           String?
 }
 
@@ -28,8 +28,7 @@ model Team {
 }
 
 model Tag {
-  id     String  @id @default(uuid())
-  name   String
-  Team   Team?   @relation(fields: [teamId], references: [id])
-  teamId String?
+  id    String @id @default(uuid())
+  name  String
+  teams Team[]
 }

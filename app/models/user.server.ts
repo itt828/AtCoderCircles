@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { getUserInfo } from "~/libs/atcoder-api.server";
+import { db } from "~/utils/db.server";
 
 export const userSchema = z.object({
   atcoderId: z.string(),
@@ -24,3 +26,30 @@ export const sampleUsers: User[] = [
   { atcoderId: "ebi_fly", algorithmRating: 1952, heuristicsRating: 843 },
   { atcoderId: "x0214sh7", algorithmRating: 1948, heuristicsRating: 877 },
 ];
+
+/// DBのユーザーテーブルにユーザーを追加　既存の場合は何もせず、新規はatcoder.jpからデータを取ってきてDBに追加
+export const mergeUsers = async (atcoderIds: string[]) => {
+  const usersTmp = await db.user.findMany({
+    where: {
+      atcoderId: {
+        in: atcoderIds,
+      },
+    },
+  });
+  db.user.deleteMany({
+    where: {
+      atcoderId: {
+        in: atcoderIds,
+      },
+    },
+  });
+  const users: User[] = [];
+  atcoderIds.forEach(async (atcoderId) => {
+    const userInfo = await getUserInfo(atcoderId);
+    users.push({
+      ...userInfo,
+    });
+    setTimeout(() => {}, 100);
+  });
+  db.user.createMany({ data: users });
+};
