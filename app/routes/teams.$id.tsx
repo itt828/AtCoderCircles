@@ -1,5 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
-import { PieChart, Pie, Text, Cell } from "recharts";
+import { PieChart, Pie, Text, Cell, ResponsiveContainer } from "recharts";
 import { colorCodeMap, mapByColor } from "~/libs/rating.server";
 import Card from "~/components/card";
 import { center, grid } from "styled-system/patterns";
@@ -7,7 +7,6 @@ import { type LoaderArgs, Response } from "@remix-run/node";
 import { db } from "~/utils/db.server";
 import { css } from "styled-system/css";
 import { Fragment } from "react";
-import { teamSchema } from "~/models/user.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
   const team = await db.team.findFirst({
@@ -96,21 +95,23 @@ export default function Team() {
           </div>
         </Card>
         <Card>
-          <PieChart width={430} height={300}>
-            <Pie
-              data={pie}
-              dataKey="value"
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              // fill="#f31
-              label={label}
-            >
-              {pie.map((data) => (
-                <Cell key={data.name} fill={data.color} />
-              ))}
-            </Pie>
-          </PieChart>
+          <ResponsiveContainer width="100%">
+            <PieChart>
+              <Pie
+                data={pie}
+                dataKey="value"
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                // fill="#f31
+                label={label}
+              >
+                {pie.map((data) => (
+                  <Cell key={data.name} fill={data.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
         </Card>
       </div>
     </>
