@@ -36,7 +36,7 @@ export const mergeUsers = async (atcoderIds: string[]) => {
       },
     },
   });
-  db.user.deleteMany({
+  await db.user.deleteMany({
     where: {
       atcoderId: {
         in: atcoderIds,
