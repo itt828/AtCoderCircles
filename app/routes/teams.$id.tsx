@@ -4,10 +4,25 @@ import { PieChart, Pie, Text, Cell } from "recharts";
 import { type Color, colorCodeMap, mapByColor } from "~/libs/rating.server";
 import Card from "~/components/card";
 import { grid } from "styled-system/patterns";
+import { LoaderArgs, Response } from "@remix-run/node";
+import { db } from "~/utils/db.server";
 
-export const loader = async () => {
-  const colorUsersList = mapByColor(sampleUsers);
-  console.log(colorUsersList);
+export const loader = async ({ params }: LoaderArgs) => {
+  const team = await db.team.findFirst({
+    where: {
+      id: params.id,
+    },
+    select: {
+      name: true,
+      members: true,
+    },
+  });
+  if (!team) {
+    throw new Response("Not found!", {
+      status: 404,
+    });
+  }
+  const colorUsersList = mapByColor(team.members);
   return {
     list: colorUsersList.map(([color, users]) => {
       const item: {

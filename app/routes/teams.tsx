@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { css } from "styled-system/css";
 import { db } from "~/utils/db.server";
 
@@ -15,7 +15,9 @@ export default function TeamsRoute() {
       <div>
         {teams.map((v) => (
           <div>
-            {v.name}: {v.id}
+            <Link to={`/teams/${v.id}`}>
+              {v.name}: {v.id}
+            </Link>
           </div>
         ))}
       </div>

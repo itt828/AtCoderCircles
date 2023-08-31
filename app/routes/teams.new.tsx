@@ -27,7 +27,7 @@ export const action = async ({ request }: ActionArgs) => {
       },
     },
   });
-  return redirect(`teams/${teams.id}`);
+  return redirect(`/teams/${teams.id}`);
 };
 export default function TeamsNew() {
   return (
