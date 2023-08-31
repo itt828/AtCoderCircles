@@ -43,13 +43,20 @@ export const mergeUsers = async (atcoderIds: string[]) => {
       },
     },
   });
-  const users: User[] = [];
-  atcoderIds.forEach(async (atcoderId) => {
+  const users: User[] = [...usersTmp];
+  const existUsersId = users.map((v) => v.atcoderId);
+  const newAtcoderIds = atcoderIds.filter((v) => !existUsersId.includes(v));
+  console.log(existUsersId);
+  console.log(newAtcoderIds);
+  for (const atcoderId of newAtcoderIds) {
     const userInfo = await getUserInfo(atcoderId);
     users.push({
       ...userInfo,
     });
     setTimeout(() => {}, 100);
-  });
-  db.user.createMany({ data: users });
+  }
+  console.log(users);
+  const { count } = await db.user.createMany({ data: users });
+  console.log(count);
+  return users;
 };

@@ -11,11 +11,10 @@ datasource db {
 }
 
 model User {
-  atcoderId        String  @id
+  atcoderId        String @id
   algorithmRating  Int?
   heuristicsRating Int?
   teams            Team[]
-  teamId           String?
 }
 
 model Team {

@@ -2,7 +2,7 @@ import { redirect, type ActionArgs } from "@remix-run/node";
 import Button from "~/components/button";
 import Input from "~/components/input";
 import TextArea from "~/components/textarea";
-import { ATCODER_ID_REGEXP, mergeUsers } from "~/models/user.server";
+import { mergeUsers } from "~/models/user.server";
 import { db } from "~/utils/db.server";
 
 export const action = async ({ request }: ActionArgs) => {
@@ -12,9 +12,22 @@ export const action = async ({ request }: ActionArgs) => {
 
   const members = membersRaw.match(/[a-zA-Z0-9_]+/g) as string[];
 
-  await mergeUsers(members);
-
-  return redirect(`teams/${id}`);
+  const membersDetail = await mergeUsers(members);
+  console.log(members);
+  console.log(membersDetail);
+  const teams = await db.team.create({
+    data: {
+      name: teamName,
+      members: {
+        connect: members.map((v) => {
+          return {
+            atcoderId: v,
+          };
+        }),
+      },
+    },
+  });
+  return redirect(`teams/${teams.id}`);
 };
 export default function TeamsNew() {
   return (
