@@ -2,11 +2,12 @@ import { useLoaderData } from "@remix-run/react";
 import { PieChart, Pie, Text, Cell } from "recharts";
 import { colorCodeMap, mapByColor } from "~/libs/rating.server";
 import Card from "~/components/card";
-import { grid } from "styled-system/patterns";
+import { center, grid } from "styled-system/patterns";
 import { type LoaderArgs, Response } from "@remix-run/node";
 import { db } from "~/utils/db.server";
 import { css } from "styled-system/css";
 import { Fragment } from "react";
+import { teamSchema } from "~/models/user.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
   const team = await db.team.findFirst({
@@ -25,6 +26,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   }
   const colorUsersList = mapByColor(team.members);
   return {
+    name: team.name,
     list: colorUsersList
       .map(([color, users]) => {
         return users.map((user) => {
@@ -50,7 +52,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   };
 };
 export default function Team() {
-  const { list, pie } = useLoaderData<typeof loader>();
+  const { name, list, pie } = useLoaderData<typeof loader>();
   const label = ({ name, value, color, cx, x, y }) => (
     <>
       <Text x={x} y={y} fill={color}>
@@ -62,53 +64,56 @@ export default function Team() {
     </>
   );
   return (
-    <div className={gridStyles}>
-      <Card>
-        <div
-          className={css({
-            height: "full",
-            padding: "3",
-            overflowY: "auto",
-          })}
-        >
-          <div className={grid({ columns: 3 })}>
-            <div>ID </div>
-            <div className={css({ textAlign: "right" })}>Algorithm</div>
-            <div className={css({ textAlign: "right" })}>Heuristics</div>
-            {list.map(
-              ({ atcoderId, algorithmRating, heuristicsRating, color }) => (
-                <Fragment key={atcoderId}>
-                  <div style={{ color: color }}>{atcoderId} </div>
-                  <span className={css({ textAlign: "right" })}>
-                    {algorithmRating}
-                  </span>
-                  <span className={css({ textAlign: "right" })}>
-                    {heuristicsRating}
-                  </span>
-                </Fragment>
-              )
-            )}
-          </div>
-        </div>
-      </Card>
-      <Card>
-        <PieChart width={430} height={300}>
-          <Pie
-            data={pie}
-            dataKey="value"
-            cx="50%"
-            cy="50%"
-            outerRadius={100}
-            // fill="#f31
-            label={label}
+    <>
+      <h1 className={center({ fontSize: "3xl" })}>{name}</h1>
+      <div className={gridStyles}>
+        <Card>
+          <div
+            className={css({
+              height: "full",
+              padding: "3",
+              overflowY: "auto",
+            })}
           >
-            {pie.map((data) => (
-              <Cell key={data.name} fill={data.color} />
-            ))}
-          </Pie>
-        </PieChart>
-      </Card>
-    </div>
+            <div className={grid({ columns: 3 })}>
+              <div>ID </div>
+              <div className={css({ textAlign: "right" })}>Algorithm</div>
+              <div className={css({ textAlign: "right" })}>Heuristics</div>
+              {list.map(
+                ({ atcoderId, algorithmRating, heuristicsRating, color }) => (
+                  <Fragment key={atcoderId}>
+                    <div style={{ color: color }}>{atcoderId} </div>
+                    <span className={css({ textAlign: "right" })}>
+                      {algorithmRating}
+                    </span>
+                    <span className={css({ textAlign: "right" })}>
+                      {heuristicsRating}
+                    </span>
+                  </Fragment>
+                )
+              )}
+            </div>
+          </div>
+        </Card>
+        <Card>
+          <PieChart width={430} height={300}>
+            <Pie
+              data={pie}
+              dataKey="value"
+              cx="50%"
+              cy="50%"
+              outerRadius={100}
+              // fill="#f31
+              label={label}
+            >
+              {pie.map((data) => (
+                <Cell key={data.name} fill={data.color} />
+              ))}
+            </Pie>
+          </PieChart>
+        </Card>
+      </div>
+    </>
   );
 }
 
@@ -117,4 +122,5 @@ const gridStyles = css({
   gridTemplateColumns: "repeat(2, 1fr)",
   gridAutoRows: "300px",
   gap: "4",
+  padding: "4",
 });

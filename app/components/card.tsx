@@ -8,5 +8,5 @@ export default function Card({ children }: PropsWithChildren<{}>) {
 
 const cardStyle: SystemStyleObject = {
   borderRadius: "20px",
-  backgroundColor: "#f4f4f4",
+  bg: "white",
 };
