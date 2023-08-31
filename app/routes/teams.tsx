@@ -14,7 +14,7 @@ export default function TeamsRoute() {
     <div className={css({ margin: "40px 40px" })}>
       <div>
         {teams.map((v) => (
-          <div>
+          <div key={v.id}>
             <Link to={`/teams/${v.id}`}>
               {v.name}: {v.id}
             </Link>
