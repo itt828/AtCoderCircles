@@ -6,6 +6,7 @@ import Card from "~/components/card";
 import { grid } from "styled-system/patterns";
 import { LoaderArgs, Response } from "@remix-run/node";
 import { db } from "~/utils/db.server";
+import { css } from "styled-system/css";
 
 export const loader = async ({ params }: LoaderArgs) => {
   const team = await db.team.findFirst({
@@ -63,21 +64,66 @@ export default function Team() {
     </>
   );
   return (
-    <div className={grid({ columns: 1 })}>
+    <div className={gridStyles}>
       <Card>
+        <div className={grid({ columns: 3 })}>
+          <span className={css({ width: "100px", marginRight: "6px" })}>
+            ID{" "}
+          </span>
+          <span
+            className={css({
+              width: "32px",
+              marginRight: "6px",
+              textAlign: "right",
+            })}
+          >
+            Algorithm
+          </span>
+          <span
+            className={css({
+              width: "32px",
+              marginRight: "6px",
+              textAlign: "right",
+            })}
+          >
+            Heuristics
+          </span>
+        </div>
         {list.map(({ color, colorCode, count, users }) => (
           <div key={color}>
             {users.map((user) => (
-              <div key={user.atcoderId}>
-                <span style={{ color: colorCode }}>{user.atcoderId} </span>:{" "}
-                {user.algorithmRating}
+              <div key={user.atcoderId} className={grid({ columns: 3 })}>
+                <span
+                  style={{ color: colorCode }}
+                  className={css({ width: "100px", marginRight: "6px" })}
+                >
+                  {user.atcoderId}{" "}
+                </span>
+                <span
+                  className={css({
+                    width: "32px",
+                    marginRight: "6px",
+                    textAlign: "right",
+                  })}
+                >
+                  {user.algorithmRating}
+                </span>
+                <span
+                  className={css({
+                    width: "32px",
+                    marginRight: "6px",
+                    textAlign: "right",
+                  })}
+                >
+                  {user.heuristicsRating}
+                </span>
               </div>
             ))}
           </div>
         ))}
       </Card>
       <Card>
-        <PieChart width={730} height={300}>
+        <PieChart width={430} height={300}>
           <Pie
             data={pie}
             dataKey="value"
@@ -96,3 +142,14 @@ export default function Team() {
     </div>
   );
 }
+
+const gridStyles = css({
+  display: "grid",
+  gridTemplateColumns: "repeat(2, 1fr)",
+  gridAutoRows: "300px",
+  gap: "4",
+});
+
+const hogeStyles = css({
+  backgroundColor: "blue.400",
+});
