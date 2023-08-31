@@ -1,12 +1,12 @@
 import { useLoaderData } from "@remix-run/react";
-import { type User, sampleUsers } from "~/models/user.server";
 import { PieChart, Pie, Text, Cell } from "recharts";
-import { type Color, colorCodeMap, mapByColor } from "~/libs/rating.server";
+import { colorCodeMap, mapByColor } from "~/libs/rating.server";
 import Card from "~/components/card";
 import { grid } from "styled-system/patterns";
-import { LoaderArgs, Response } from "@remix-run/node";
+import { type LoaderArgs, Response } from "@remix-run/node";
 import { db } from "~/utils/db.server";
 import { css } from "styled-system/css";
+import { Fragment } from "react";
 
 export const loader = async ({ params }: LoaderArgs) => {
   const team = await db.team.findFirst({
@@ -25,20 +25,18 @@ export const loader = async ({ params }: LoaderArgs) => {
   }
   const colorUsersList = mapByColor(team.members);
   return {
-    list: colorUsersList.map(([color, users]) => {
-      const item: {
-        color: Color;
-        colorCode?: string;
-        count: number;
-        users: User[];
-      } = {
-        color: color,
-        colorCode: colorCodeMap.get(color)?.color,
-        count: users.length,
-        users: users,
-      };
-      return item;
-    }),
+    list: colorUsersList
+      .map(([color, users]) => {
+        return users.map((user) => {
+          return {
+            atcoderId: user.atcoderId,
+            algorithmRating: user.algorithmRating,
+            heuristicsRating: user.heuristicsRating,
+            color: colorCodeMap.get(color)?.color,
+          };
+        });
+      })
+      .flat(),
     pie: colorUsersList
       .map(([color, users]) => {
         return {
@@ -66,61 +64,32 @@ export default function Team() {
   return (
     <div className={gridStyles}>
       <Card>
-        <div className={grid({ columns: 3 })}>
-          <span className={css({ width: "100px", marginRight: "6px" })}>
-            ID{" "}
-          </span>
-          <span
-            className={css({
-              width: "32px",
-              marginRight: "6px",
-              textAlign: "right",
-            })}
-          >
-            Algorithm
-          </span>
-          <span
-            className={css({
-              width: "32px",
-              marginRight: "6px",
-              textAlign: "right",
-            })}
-          >
-            Heuristics
-          </span>
-        </div>
-        {list.map(({ color, colorCode, count, users }) => (
-          <div key={color}>
-            {users.map((user) => (
-              <div key={user.atcoderId} className={grid({ columns: 3 })}>
-                <span
-                  style={{ color: colorCode }}
-                  className={css({ width: "100px", marginRight: "6px" })}
-                >
-                  {user.atcoderId}{" "}
-                </span>
-                <span
-                  className={css({
-                    width: "32px",
-                    marginRight: "6px",
-                    textAlign: "right",
-                  })}
-                >
-                  {user.algorithmRating}
-                </span>
-                <span
-                  className={css({
-                    width: "32px",
-                    marginRight: "6px",
-                    textAlign: "right",
-                  })}
-                >
-                  {user.heuristicsRating}
-                </span>
-              </div>
-            ))}
+        <div
+          className={css({
+            height: "full",
+            padding: "3",
+            overflowY: "auto",
+          })}
+        >
+          <div className={grid({ columns: 3 })}>
+            <div>ID </div>
+            <div className={css({ textAlign: "right" })}>Algorithm</div>
+            <div className={css({ textAlign: "right" })}>Heuristics</div>
+            {list.map(
+              ({ atcoderId, algorithmRating, heuristicsRating, color }) => (
+                <Fragment key={atcoderId}>
+                  <div style={{ color: color }}>{atcoderId} </div>
+                  <span className={css({ textAlign: "right" })}>
+                    {algorithmRating}
+                  </span>
+                  <span className={css({ textAlign: "right" })}>
+                    {heuristicsRating}
+                  </span>
+                </Fragment>
+              )
+            )}
           </div>
-        ))}
+        </div>
       </Card>
       <Card>
         <PieChart width={430} height={300}>
@@ -148,8 +117,4 @@ const gridStyles = css({
   gridTemplateColumns: "repeat(2, 1fr)",
   gridAutoRows: "300px",
   gap: "4",
-});
-
-const hogeStyles = css({
-  backgroundColor: "blue.400",
 });
