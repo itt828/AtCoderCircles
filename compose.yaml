@@ -16,13 +16,13 @@ services:
       - ./mysql/data:/var/lib/mysql
     expose:
       - 3306
+    ports:
+      - 3307:3306
     healthcheck:
       test: mysql --user=root --password=password --execute "SHOW DATABASES;"
       interval: 1s
       timeout: 10s
       retries: 60
-    ports:
-      - "3306:3306"
     networks:
       - default
 
