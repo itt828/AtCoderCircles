@@ -14,6 +14,11 @@ export default function TeamsRoute() {
   const teams = useLoaderData<typeof loader>();
   return (
     <>
+      <header className={css({ marginY: "4" })}>
+        <Link to="/">
+          <h1>Atcoder Circles</h1>
+        </Link>
+      </header>
       <main className={css({ bg: "gray.100" })}>
         <Outlet />
       </main>
