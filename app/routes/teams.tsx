@@ -19,6 +19,7 @@ export default function TeamsRoute() {
       </main>
       <div className={css({ bg: "blue.100" })}>
         <h2 className={css({ fontSize: "2xl" })}>チーム一覧</h2>
+        <Link to="/teams/new">+ チーム作成</Link>
         <div>
           <input placeholder="検索" />
         </div>
