@@ -82,7 +82,9 @@ export default function Team() {
               {list.map(
                 ({ atcoderId, algorithmRating, heuristicsRating, color }) => (
                   <Fragment key={atcoderId}>
-                    <div style={{ color: color }}>{atcoderId} </div>
+                    <Link to={`/users/${atcoderId}`}>
+                      <div style={{ color: color }}>{atcoderId} </div>
+                    </Link>
                     <span className={css({ textAlign: "right" })}>
                       {algorithmRating}
                     </span>
