@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { PieChart, Pie, Text, Cell, ResponsiveContainer } from "recharts";
 import { colorCodeMap, mapByColor } from "~/libs/rating.server";
 import Card from "~/components/card";
@@ -65,6 +65,7 @@ export default function Team() {
   return (
     <>
       <h1 className={center({ fontSize: "3xl" })}>{name}</h1>
+      <Link to="edit">編集</Link>
       <div className={gridStyles}>
         <Card>
           <div
