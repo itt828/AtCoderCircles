@@ -1,4 +1,5 @@
 import { redirect, type ActionArgs } from "@remix-run/node";
+import TagInput from "~/components/TagInput";
 import Button from "~/components/button";
 import Input from "~/components/input";
 import TextArea from "~/components/textarea";
@@ -35,6 +36,7 @@ export default function TeamsNew() {
       <Input type="text" placeholder="チーム名" name="teamName" />
       <TextArea placeholder="メンバー" name="members" />
       <Input type="password" placeholder="パスワード" name="password" />
+      <TagInput value={[]} name="a" />
       <Button type="submit">作成</Button>
     </form>
   );
