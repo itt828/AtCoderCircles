@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useFieldArray } from "remix-validated-form";
-import Input from "./input";
-import Button from "./button";
+import Input from "../UI/Input";
+import Button from "../UI/Button";
 
 export default function TagInput({
   name,
@@ -34,7 +34,14 @@ export default function TagInput({
         value={newTagName}
         onChange={(e) => setNewTagName(e.target.value)}
       />
-      <Button onClick={() => push(newTagName)}>add</Button>
+      <Button
+        onClick={() => {
+          push(newTagName);
+          setNewTagName("");
+        }}
+      >
+        add
+      </Button>
     </>
   );
 }
