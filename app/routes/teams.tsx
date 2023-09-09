@@ -1,7 +1,7 @@
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { css } from "styled-system/css";
 import { flex } from "styled-system/patterns";
-import Tag from "~/components/tag";
+import Tag from "~/components/UI/Tag";
 import { db } from "~/utils/db.server";
 
 export const loader = async () => {

@@ -1,7 +1,7 @@
 import { Link, useLoaderData } from "@remix-run/react";
 import { PieChart, Pie, Text, Cell, ResponsiveContainer } from "recharts";
 import { colorCodeMap, mapByColor } from "~/libs/rating.server";
-import Card from "~/components/card";
+import Card from "~/components/UI/Card";
 import { center, grid } from "styled-system/patterns";
 import { type LoaderArgs, Response } from "@remix-run/node";
 import { db } from "~/utils/db.server";

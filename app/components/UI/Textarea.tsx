@@ -1,7 +1,7 @@
 import { type ComponentProps } from "react";
 import { css, cx } from "styled-system/css";
 
-export default function TextArea({
+export default function Textarea({
   className,
   ...props
 }: ComponentProps<"textarea">) {
