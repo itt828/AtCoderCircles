@@ -28,6 +28,6 @@ model Team {
 
 model Tag {
   id    String @id @default(uuid())
-  name  String
+  name  String @unique
   teams Team[]
 }
