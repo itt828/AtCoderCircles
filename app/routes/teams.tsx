@@ -5,8 +5,15 @@ import Tag from "~/components/UI/Tag";
 import { db } from "~/utils/db.server";
 
 export const loader = async () => {
-  const teams = await db.team.findMany();
-  console.log(teams);
+  const teams = await db.team.findMany({
+    select: {
+      id: true,
+      name: true,
+      teamAlgorithmRating: true,
+      teamHeuristicsRating: true,
+      tags: true,
+    },
+  });
   return teams;
 };
 
@@ -35,11 +42,13 @@ export default function TeamsRoute() {
                 <div className={css({ display: "flex", gap: "4" })}>
                   <div className={css({ width: "20" })}>{v.name}</div>
                   <div className={flex({ direction: "row", gap: "2" })}>
-                    <Tag name="#ほげほげ" />
-                    <Tag name="#ほげほげ" />
-                    <Tag name="#ほげほげ" />
-                    <Tag name="#ほげほげ" />
-                    <Tag name="#ほげほげ" />
+                    {v.tags.map((tag) => (
+                      <div key={tag.id}>
+                        <Link to={`/tags/${tag.id}`}>
+                          <Tag name={`#${tag.name}`} />
+                        </Link>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </Link>
