@@ -16,6 +16,7 @@ export const loader = async ({ params }: LoaderArgs) => {
     select: {
       name: true,
       members: true,
+      tags: true,
     },
   });
   if (!team) {
@@ -26,6 +27,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   const colorUsersList = mapByColor(team.members);
   return {
     name: team.name,
+    tags: team.tags,
     list: colorUsersList
       .map(([color, users]) => {
         return users.map((user) => {
@@ -51,7 +53,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   };
 };
 export default function Team() {
-  const { name, list, pie } = useLoaderData<typeof loader>();
+  const { name, tags, list, pie } = useLoaderData<typeof loader>();
   const label = ({ name, value, color, cx, x, y }) => (
     <>
       <Text x={x} y={y} fill={color}>
@@ -65,6 +67,13 @@ export default function Team() {
   return (
     <>
       <h1 className={center({ fontSize: "3xl" })}>{name}</h1>
+      <div>
+        {tags.map(({ id, name }) => (
+          <span key={id}>
+            <Link to={`/tags/${id}`}>#{name}</Link>
+          </span>
+        ))}
+      </div>
       <Link to="edit">編集</Link>
       <div className={gridStyles}>
         <Card>
