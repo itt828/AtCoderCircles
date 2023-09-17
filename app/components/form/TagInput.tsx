@@ -12,9 +12,9 @@ export default function TagInput({
   const [items, { push, remove }] = useFieldArray(name);
   return (
     <div>
-      {items.map(({ defaultValue, key }, index) => (
+      {items.map(({ key, defaultValue }, index) => (
         <div key={key}>
-          <Input name={`${name}[${index}]`} />
+          <Input name={`${name}[${index}]`} defaultValue={defaultValue} />
           <Button
             type="button"
             onClick={() => {
