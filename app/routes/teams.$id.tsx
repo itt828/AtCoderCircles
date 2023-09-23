@@ -2,11 +2,13 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { PieChart, Pie, Text, Cell, ResponsiveContainer } from "recharts";
 import { colorCodeMap, mapByColor } from "~/libs/rating.server";
 import Card from "~/components/UI/Card";
-import { center, grid } from "styled-system/patterns";
+import { center, flex, grid } from "styled-system/patterns";
 import { type LoaderArgs, Response } from "@remix-run/node";
 import { db } from "~/utils/db.server";
 import { css } from "styled-system/css";
 import { Fragment } from "react";
+import Button from "~/components/UI/Button";
+import Tag from "~/components/UI/Tag";
 
 export const loader = async ({ params }: LoaderArgs) => {
   const team = await db.team.findFirst({
@@ -66,15 +68,20 @@ export default function Team() {
   );
   return (
     <>
-      <h1 className={center({ fontSize: "3xl" })}>{name}</h1>
-      <div>
+      <h1 className={center({ fontSize: "3xl" })}> {name}</h1>
+      <Button>
+        <Link to="edit">
+          <span className={css({ fontSize: "md" })}>編集</span>
+        </Link>
+      </Button>
+
+      <div className={flex({ gap: "1" })}>
         {tags.map(({ id, name }) => (
-          <span key={id}>
-            <Link to={`/tags/${id}`}>#{name}</Link>
-          </span>
+          <Link key={id} to={`/tags/${id}`}>
+            <Tag name={`#${name}`} />
+          </Link>
         ))}
       </div>
-      <Link to="edit">編集</Link>
       <div className={gridStyles}>
         <Card>
           <div
